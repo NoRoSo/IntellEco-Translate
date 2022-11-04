@@ -2,8 +2,8 @@
 Made for the Carbon Hack 2022 competition, these are the files that were made. The team consists of Noe Soto, Ziliang Zong, and Lucia Ye.
 # Contact info:
 <ul>
-  <li>Noe Soto (Backend & Frontend): fairfieldns@gmail.com</li>
-  <li>Ziliang Zong (Backend & VM Setup): ziliang@txstate.edu</li>
+  <li>Noe Soto (Backend & Frontend Programming): fairfieldns@gmail.com</li>
+  <li>Ziliang Zong (Backend Programming & VM Setup): ziliang@txstate.edu</li>
   <li>Lucia Ye (Frontend Designs & Video): lu.ye@network.rca.ac.uk</li>
 </ul>
 
