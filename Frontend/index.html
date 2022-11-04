@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!--Written by Noe Soto-->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -356,18 +355,8 @@
     <option value="jpn_Jpan">Japanese</option>
     <option value="zho_Hans">Chinese</option>
   </select>
-  <textarea id="input_area" class="input_box"placeholder="Enter text here..." maxlength="250" onkeydown="pressed(event)">Your translation request will be sent to the nearest server when Eco mode is off and the lowest carbon server when the Eco Mode is on.</textarea>
-  <div id="counter" style="position: absolute; bottom:5%; left:50%; color: #4d4b4b;">0/250</div>
-  <script>
-    const messageEle = document.getElementById("input_area");
-    const counterEle = document.getElementById("counter");
-    messageEle.addEventListener('input', function (e){
-      const target = e.target;
-      const maxLength = target.getAttribute('maxlength');
-      const currentLength = target.value.length;
-      counterEle.innerHTML = currentLength + "/" + maxLength;
-    });
-  </script>
+  <textarea id="input_area" class="input_box"placeholder="Enter text here..." maxlength="250" onkeydown="pressed(event)">We deployed servers in France, East US, West US, UK, and Australia. Your translation request will be sent to the nearest server when Eco mode is off and the lowest carbon server when the Eco Mode is on. Try it to see how you can help reduce carbon!</textarea>
+  <label id="region_used" style="position: absolute; color: white; bottom: 5%; left: 35%;">Region used:</label>
   <script>
     function pressed(e){
       if((window.event? event.keyCode : e.which) == 13){
@@ -390,10 +379,9 @@
     <option value="zho_Hans">Chinese</option>
   </select>
   <textarea id="output_area" disabled="yes" class="input_box" readonly></textarea>
-  <label id="region_used" style="position: absolute; color: white; bottom: 5%; left: 5%;">Region used:</label>
 </output>
 
-<info_box id="info_box">
+<info_box id="info_box" style = "position: absolute; width: 93%; left: 2%;">
   <lines_top style="top: 13%;"></lines_top>
   <div class="tab" style="padding-left: 43%;">
     <button id="works_bttn" class="tablinks" onclick="openTab(event, 'How_it_works')">How it works</button>
