@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<!--Written by Noe Soto-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>IntellEco Translate</title>
+<!--text boxes and info boxes-->
+  <style>
+    .input_box{
+      position: absolute;
+      width: 98%;
+      height: 65%;
+      top: 16%;
+      left: 1%;
+      border: none;
+      /*background: #d55151;*/
+      background: transparent;
+      font-size: 20px;
+      color: white;
+      font-family: noto sans;
+      text-align: left;
+      padding-top: 0;
+      resize: none;
+    }
+
+    .input_box_copy{
+      position: absolute;
+      width: 40%;
+      height: 400px;
+      left: 2%;
+      top: 138px;
+
+      border: none;
+      background: #161616;
+      border-radius: 20px;
+      font-size: 20px;
+      color: white;
+      font-family: noto sans;
+    }
+
+    output{
+      position: absolute;
+      width: 40%;
+      height: 400px;
+      right: 5%;
+      top: 138px;
+
+      background: #161616;
+      border-radius: 20px;
+    }
+
+    info_box{
+      position: absolute;
+      width: 90%;
+      height: 352px;
+      top: 586px;
+      left: 3.5%;
+      background: #000000;
+      border-radius: 20px;
+    }
+
+    empty_box{
+      position: absolute;
+      width: 50%;
+      height: 85%;
+      top: 15%;
+      left: 50%;
+      background: transparent;
+      border-radius: 20px;
+    }
+    .number_box{
+      position: absolute;
+      width: 48px;
+      height: 48px;
+
+      background: #202020;
+      border-radius: 10px;
+
+      font-family: 'Noto Sans';
+      font-style: normal;
+      font-weight: 700;
+      font-size: 35px;
+      line-height: 24px;
+      /* or 100% */
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      letter-spacing: -0.408px;
+
+      color: #00C6A2;
+    }
+    .dot {
+      height: 10px;
+      width: 10px;
+      background: radial-gradient(173.51% 8119.71% at 95.11% -29.17%, #7DFB7A 0%, #00C6A2 100%);
+      border-radius: 50%;
+      display: inline-block;
+    }
+  </style>
+<!--the eco toggle & submission button-->
+  <style>
+    .submit_button{
+      position: absolute;
+      width: 15%;
+      height: 10%;
+      right: 10%;
+      bottom: 3%;
+
+      background: #00C6A2;
+      border-radius: 10px;
+
+      color: white;
+      font-family: 'noto sans';
+      font-style: normal;
+      font-size: 100%;
+      cursor: pointer;
+    }
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 90px;
+      height: 34px;
+    }
+
+    .switch input {display:none;}
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #373737;
+      -webkit-transition: .4s;
+      transition: .4s;
+      border-radius: 34px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: #C5C5C5;
+      -webkit-transition: .4s;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background: radial-gradient(71.87% 71.87% at 50% 28.13%, #7DFB7A 0%, #00C6A2 100%);
+      box-shadow: 0px 0px 8px rgba(125, 251, 122, 0.5);
+    }
+
+    input:focus + .slider {
+      box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked + .slider:before {
+      -webkit-transform: translateX(26px);
+      -ms-transform: translateX(26px);
+      transform: translateX(55px);
+    }
+
+    /*------ ADDED CSS ---------*/
+    .slider:after
+    {
+      content:'OFF';
+      color: white;
+      display: block;
+      position: absolute;
+      transform: translate(-50%,-50%);
+      top: 50%;
+      left: 50%;
+      font-size: 10px;
+      font-family: Verdana, sans-serif;
+    }
+
+    input:checked + .slider:after
+    {
+      content:'ON';
+    }
+
+    /*--------- END --------*/
+  </style>
+<!--logo & banner-->
+  <style>
+    black_banner{
+      position: absolute;
+      width: 100%;
+      height: 90px;
+      left: 0px;
+      top: 0px;
+
+      background: #000000;
+    }
+
+    name_banner{
+      position: absolute;
+      width: 225px;
+      height: 24px;
+      left: 70px;
+      top: 33px;
+
+      font-family: 'Noto Sans';
+      font-style: normal;
+      font-weight: 900;
+      font-size: 24px;
+      line-height: 24px;
+      /* identical to box height, or 100% */
+
+      display: flex;
+      align-items: center;
+      letter-spacing: -0.408px;
+
+      background: radial-gradient(173.51% 8119.71% at 95.11% -29.17%, #7DFB7A 0%, #00C6A2 100%) /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-fill-color: transparent;
+    }
+  </style>
+<!--dropdown menu for language choice-->
+  <style>
+    .dropdown{
+      position: absolute;
+      width: 220px;
+      height: 44px;
+      left: 2%;
+      top: 2%;
+
+      background: #313132;
+      border-radius: 10px;
+      border: none;
+
+      font-family: 'Noto Sans';
+      font-style: normal;
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 24px;
+      /* identical to box height, or 150% */
+
+      letter-spacing: 0.38px;
+
+      color: #FFFFFF;
+      cursor: pointer;
+    }
+  </style>
+<!--The lines on the text boxes-->
+  <style>
+    lines_top{
+      position: absolute;
+      width: 100%;
+      height: 0px;
+      top: 15%;
+      border: 1px solid #313132;
+    }
+    lines_bottom{
+      position: absolute;
+      width: 100%;
+      height: 0px;
+      bottom: 15%;
+
+      border: 1px solid #313132;
+    }
+  </style>
+<!--the tabs for the info box-->
+  <style>
+    body {font-family: Arial;}
+
+    /* Style the tab */
+    .tab {
+      overflow: hidden;
+      /*border: 1px solid #ccc;*/
+      border: none;
+      background-color: transparent;
+    }
+
+    /* Style the buttons inside the tab */
+    .tab button {
+      background-color: inherit;
+      float: left;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      transition: 0.3s;
+      font-size: 17px;
+      color: white;
+    }
+
+    /* Change background color of buttons on hover */
+    .tab button:hover {
+      background-color: #ddd;
+    }
+
+    /* Create an active/current tablink class */
+    .tab button.active {
+      background-color: #ccc;
+      border-bottom: #00C6A2;
+    }
+
+    /* Style the tab content */
+    .tabcontent {
+      display: none;
+      padding: 6px 12px;
+      /*border: 1px solid #ccc;*/
+      border: none;
+      border-top: none;
+    }
+  </style>
+<!--script to include the chart data/files.-->
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+</head>
+<body id = "background" style = "background: #313132">
+<black_banner>
+  <img src="https://i.imgur.com/fsc4nLk.png" style="position: absolute; width: 48px; height: 48px; top: 20px; left: 15px;">
+  <div class="logo"></div>
+<name_banner>IntellEco Translate</name_banner>
+</black_banner>
+
+<div class="input_box_copy">
+  <lines_top></lines_top>
+  <lines_bottom></lines_bottom>
+  <label id="checkbox_label" class="switch" style="top: 88%; left: 20%;" onclick="changeColor()">
+    <input type="checkbox" id="eco_toggle">
+    <div class="slider round"></div>
+  </label>
+  <p style="position:absolute; color: white; bottom: 0%; left: 2%;">Eco mode</p>
+  <button id="translation_button" class="submit_button" onclick="callAPI()">Translate</button>
+<!--script used to change button color based on the eco_toggle-->
+  <script>
+    function changeColor(){
+      let btn = document.getElementById('eco_toggle');
+      if(btn.checked){
+        //on
+        document.getElementById('translation_button').style.background = "#00C6A2";
+        document.getElementById('is_on').innerHTML = "You have Eco Mode ON at the moment, so a green bar will appear indicating which region was used to fulfill your request.";
+      }else{
+        //off
+        document.getElementById('translation_button').style.background = "#FF6B00";
+        document.getElementById('is_on').innerHTML = "You have Eco Mode OFF at the moment, so a green bar will appear indicating which region could have been used if you had Eco Mode ON and an orange bar indicating which region you actually used to fulfill your request.";
+      }
+    }
+
+  </script>
+  <select id="input_lang" class="dropdown">
+    <option value="eng_Latn" selected class="dropdown">English</option>
+    <option value="spa_Latn">Spanish</option>
+    <option value="fra_Latn">French</option>
+    <option value="deu_Latn">German</option>
+    <option value="jpn_Jpan">Japanese</option>
+    <option value="zho_Hans">Chinese</option>
+  </select>
+  <textarea id="input_area" class="input_box"placeholder="Enter text here..." maxlength="250" onkeydown="pressed(event)">Your translation request will be sent to the nearest server when Eco mode is off and the lowest carbon server when the Eco Mode is on.</textarea>
+  <div id="counter" style="position: absolute; bottom:5%; left:50%; color: #4d4b4b;">0/250</div>
+  <script>
+    const messageEle = document.getElementById("input_area");
+    const counterEle = document.getElementById("counter");
+    messageEle.addEventListener('input', function (e){
+      const target = e.target;
+      const maxLength = target.getAttribute('maxlength');
+      const currentLength = target.value.length;
+      counterEle.innerHTML = currentLength + "/" + maxLength;
+    });
+  </script>
+  <script>
+    function pressed(e){
+      if((window.event? event.keyCode : e.which) == 13){
+        e.preventDefault();
+        callAPI();
+      }
+    }
+  </script>
+</div>
+
+<output>
+  <lines_top></lines_top>
+  <lines_bottom></lines_bottom>
+  <select id="output_lang" class="dropdown">
+    <option value="eng_Latn">English</option>
+    <option value="spa_Latn" selected>Spanish</option>
+    <option value="fra_Latn">French</option>
+    <option value="deu_Latn">German</option>
+    <option value="jpn_Jpan">Japanese</option>
+    <option value="zho_Hans">Chinese</option>
+  </select>
+  <textarea id="output_area" disabled="yes" class="input_box" readonly></textarea>
+  <label id="region_used" style="position: absolute; color: white; bottom: 5%; left: 5%;">Region used:</label>
+</output>
+
+<info_box id="info_box">
+  <lines_top style="top: 13%;"></lines_top>
+  <div class="tab" style="padding-left: 43%;">
+    <button id="works_bttn" class="tablinks" onclick="openTab(event, 'How_it_works')">How it works</button>
+    <button id="impact_bttn" class="tablinks" onclick="openTab(event, 'Impact')">Impact</button>
+  </div>
+<!--under "how it works" tab-->
+  <div id="How_it_works" class="tabcontent">
+    <empty_box id="chart_area"></empty_box>
+    <label style="position: absolute; color: white; font-size: 30px; top: 20%; left: 15%; font-family: 'Noto Sans';font-style: normal;font-weight: 10;font-size: 24px;line-height: 24px;">What is Eco Mode?</label>
+    <textarea id="eco_percent" class="input_box" style="position: absolute; color: white; font-size: 20px; top: 30%; left: 5%; font-family: 'Noto Sans';font-style: italic;font-weight: 10;font-size: 24px;line-height: 24px;" disabled="yes" readonly>--%</textarea>
+    <textarea id="works_blurb" disabled="yes" class="input_box" style="position:absolute;color: #BBBBBB;; top:40%; left: 5%; width: 35%;" readonly>of carbon emission is saved by Eco mode compared to the normal mode by sending your request to the less carbon intense server. However you may experience a longer wait time.</textarea>
+    <textarea id="is_on" disabled="yes" class="input_box" style="position:absolute;color: #BBBBBB;; top:65%; left: 5%; width: 35%;" readonly>You have Eco Mode on at the moment, so a green bar will appear indicating which region was used to fulfill your request.</textarea>
+  </div>
+<!--under "impact" tab-->
+  <div id="Impact" class="tabcontent">
+    <div id="user_place_0" class="number_box" style="left:50%; top:17%;">-</div>
+    <div id="user_place_1" class="number_box" style="left:53.5%; top:17%;">-</div>
+    <div id="user_place_2" class="number_box" style="left:57%; top:17%;">-</div>
+
+    <div id="user_place_3" class="number_box" style="left:62%; top:17%;">-</div>
+    <div id="user_place_4" class="number_box" style="left:65.5%; top:17%;">-</div>
+    <div id="user_place_5" class="number_box" style="left:69%; top:17%;">-</div>
+
+    <div id="user_place_6" class="number_box" style="left:74%; top:17%;">-</div>
+    <div id="user_place_7" class="number_box" style="left:77.5%; top:17%;">-</div>
+    <div id="user_place_8" class="number_box" style="left:81%; top:17%;">-</div>
+
+<!--    split-->
+
+    <div id="grams_place_0" class="number_box" style="left:50%; top:40%;">-</div>
+    <div id="grams_place_1" class="number_box" style="left:53.5%; top:40%;">-</div>
+    <div id="grams_place_2" class="number_box" style="left:57%; top:40%;">-</div>
+    <div id="grams_place_3" class="number_box" style="left:60.5%; top:40%;">-</div>
+
+    <span class="dot" style="position:absolute; left: 64%; top: 50%;"></span>
+
+    <div id="grams_place_4" class="number_box" style="left:65.5%; top:40%;">-</div>
+    <div id="grams_place_5" class="number_box" style="left:69%; top:40%;">-</div>
+    <div id="grams_place_6" class="number_box" style="left:72.5%; top:40%;">-</div>
+    <div id="grams_place_7" class="number_box" style="left:76%; top:40%;">-</div>
+    <div id="grams_place_8" class="number_box" style="left:79.5%; top:40%;">-</div>
+
+<!--    split-->
+
+    <div id="cons_place_0" class="number_box" style="left:50%; top: 63%;">-</div>
+    <div id="cons_place_1" class="number_box" style="left:53.5%; top: 63%;">-</div>
+    <div id="cons_place_2" class="number_box" style="left:57%; top: 63%;">-</div>
+
+    <div id="cons_place_3" class="number_box" style="left:62%; top: 63%;">-</div>
+    <div id="cons_place_4" class="number_box" style="left:65.5%; top: 63%;">-</div>
+    <div id="cons_place_5" class="number_box" style="left:69%; top: 63%;">-</div>
+
+    <span class="dot" style="position:absolute; left: 72.5%; top: 73%;"></span>
+
+    <div id="cons_place_6" class="number_box" style="left:74%; top: 63%;">-</div>
+    <div id="cons_place_7" class="number_box" style="left:77.5%; top: 63%;">-</div>
+    <div id="cons_place_8" class="number_box" style="left:81%; top: 63%;">-</div>
+
+    <label style="position:absolute; color: white; top: 68%; left: 87%">Grams of CO2 consumed</label>
+    <label style="position:absolute; color: white; top: 22%; left: 87%">Requests</label>
+    <label style="position:absolute; color: white; top: 45%; left: 87%">Grams of CO2 saved</label>
+
+    <label style="position: absolute; color: white; font-size: 30px; top: 20%; left: 15%; font-family: 'Noto Sans';font-style: normal;font-weight: 10;font-size: 24px;line-height: 24px;">What is my contribution?</label>
+    <textarea id="consumed_label" class="input_box" style="position: absolute; color: white; font-size: 20px; top: 35%; left: 5%; font-family: 'Noto Sans';font-style: italic;font-weight: 10;font-size: 24px;line-height: 24px;" disabled="yes" readonly>Send a request to see how much you consume/save!</textarea>
+    <textarea id="impact_blurb" disabled="yes" class="input_box" style="position:absolute;color: #BBBBBB;; top:60%; left: 5%; width: 35%;" readonly>A single translation request might seem trivial. However, IntellEco Translate enables a collective impact on the carbon footprint reduction.</textarea>
+  </div>
+<!--script for when loading up the website-->
+  <script>
+    document.addEventListener("DOMContentLoaded", function (event){
+      document.getElementById("impact_bttn").click();
+      document.getElementById("eco_toggle").click();
+
+      let apiURL = "https://zombieman2100-33uejy2179u3nql1.socketxp.com/counter";
+      fetch(apiURL).then(response => {
+        return response.json();
+      }).then(data => {
+        let s_users = data['total_requests'].toString();
+        let s_grams = data['saved_grams'].toFixed(5).replace(".", "").toString();
+        let s_total_grams = data['total_grams'].toFixed(3).replace(".", "").toString();
+
+        let ind = 8;
+        for(let i = s_users.length - 1; i >= 0 && ind >= 0; i--){
+          let temp_ele = document.getElementById('user_place_' + (ind--));
+          temp_ele.innerHTML = s_users[i];
+        }
+        ind = 8;
+        for(let i = s_grams.length - 1; i >= 0 && ind >= 0; i--){
+          let temp_ele = document.getElementById('grams_place_' + (ind--));
+          temp_ele.innerHTML = s_grams[i];
+        }
+
+        ind = 8;
+        for(let i = s_total_grams.length - 1; i >= 0 && ind >= 0; i--){
+          let temp_ele = document.getElementById('cons_place_' + (ind--));
+          temp_ele.innerHTML = s_total_grams[i];
+        }
+      });
+    });
+  </script>
+<!--open tab script-->
+  <script>
+    var func = {
+      chart: {
+        type: 'bar',
+        backgroundColor: 'transparent'
+      },
+      title: {
+        text: 'Region Comparison'
+      },
+      xAxis: {
+        categories: ['France', 'East US', 'West US', 'Australia', 'UK']
+      },
+      yAxis: {
+        title: {
+          text: 'Carbon Rate'
+        }
+      },
+      plotOptions: {
+        series:{
+          borderRadius: 10
+        }
+      },
+      series: [{
+        pointWidth: 20,
+        color: 'orange',
+        showInLegend: false,
+        data:[
+          {y: 0, name: 'France', color: '#4B4B4C'},
+          {y: 0, name: 'East US', color: '#4B4B4C'},
+          {y: 0, name: 'West US', color: '#4B4B4C'},
+          {y: 0, name: 'Australia', color: '#4B4B4C'},
+          {y: 0, name: 'UK', color: '#4B4B4C'}
+        ]
+      }]
+    };
+    function openTab(evt, tabName) {
+      var i, tabcontent, tablinks;
+      tabcontent = document.getElementsByClassName("tabcontent");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+      tablinks = document.getElementsByClassName("tablinks");
+      for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+      document.getElementById(tabName).style.display = "block";
+      evt.currentTarget.className += " active";
+
+      if(tabName == "How_it_works"){
+        let chart = Highcharts.chart('chart_area', func);
+      }
+    }
+  </script>
+</info_box>
+
+<!--script for calling API + SDK-->
+<script>
+  let region_list = ['FR', 'PJM_ROANOKE', 'CAISO_NORTH', 'NEW_NSW', 'UK'];
+async function callAPI(){
+  document.getElementById('output_area').innerHTML = "Request received, please wait...";
+  let text = document.getElementById("input_area").value;
+  let eco_toggle = document.getElementById("eco_toggle").checked;
+  let ip = (await getIPs())[0];
+  let src_lang = document.getElementById("input_lang").value;
+  let tgt_lang = document.getElementById("output_lang").value;
+  // const inner = document.getElementById("output_area");
+  let apiURL = "https://zombieman2100-33uejy2179u3nql1.socketxp.com" +
+  "/translation?ip=" + ip + "&eco_toggle=" + eco_toggle + "&text=" + text +
+  "&src_lang=" + src_lang + "&tgt_lang=" + tgt_lang;
+  fetch(apiURL).then(response => {
+    return response.json();
+  }).then(data => {
+    console.log(data);
+    const output_area = document.getElementById("output_area");
+    output_area.innerHTML = data["translation"];
+    func.series[0].data[0].y = data["FR"]; //updating the france graph
+    func.series[0].data[1].y = data["PJM_ROANOKE"]; //updating the East US graph
+    func.series[0].data[2].y = data["CAISO_NORTH"]; //updating the West US graph
+    func.series[0].data[3].y = data["NEM_NSW"]; //updating the Aus. graph
+    func.series[0].data[4].y = data["UK"]; //updating the UK graph
+
+    for(let i = 0; i < 5; i++){
+      func.series[0].data[i].color = '#4B4B4C';
+    }
+
+    let region_name = "";
+    if(eco_toggle){
+      let percent = ((data[data['closest_region']] - data[data['region']])/data[data['closest_region']] * 100.0).toFixed(2).toString();
+      document.getElementById('eco_percent').innerHTML = percent + "%"
+      document.getElementById("consumed_label").innerHTML = "You saved " + parseFloat(data["amount_saved"]).toFixed(6).toString() + " grams of carbon!";
+      switch(data['region']){
+        case 'FR':
+          func.series[0].data[0].color = '#7DFB7A'; region_name = "France"; break;
+        case 'PJM_ROANOKE':
+          func.series[0].data[1].color = '#7DFB7A'; region_name = "East US"; break;
+        case 'CAISO_NORTH':
+          func.series[0].data[2].color = '#7DFB7A'; region_name = "West US"; break;
+        case 'NEM_NSW':
+          func.series[0].data[3].color = '#7DFB7A'; region_name = "Australia"; break;
+        case 'UK':
+          func.series[0].data[4].color = '#7DFB7A'; region_name = "UK"; break;
+      }
+    }else{
+      document.getElementById('eco_percent').innerHTML = "--%";
+      document.getElementById("consumed_label").innerHTML = "You consumed " + parseFloat(data["carbon"]).toFixed(6).toString() + " grams of carbon!\n" +
+              "Turn on Eco Mode to see how much you can save.";
+      let smallest = Number.MAX_SAFE_INTEGER;
+      let smallest_ind = 0;
+      for(let i = 0; i < region_list.length; i++){
+        if(data[region_list[i]] < smallest){
+          smallest_ind = i;
+          smallest = data[region_list[i]];
+        }
+      }
+      switch(region_list[smallest_ind]){
+        case 'FR':
+          func.series[0].data[0].color = '#7DFB7A'; break;
+        case 'PJM_ROANOKE':
+          func.series[0].data[1].color = '#7DFB7A'; break;
+        case 'CAISO_NORTH':
+          func.series[0].data[2].color = '#7DFB7A'; break;
+        case 'NEM_NSW':
+          func.series[0].data[3].color = '#7DFB7A'; break;
+        case 'UK':
+          func.series[0].data[4].color = '#7DFB7A'; break;
+      }
+      switch(data['region']){
+        case 'FR':
+          func.series[0].data[0].color = '#FFA800'; region_name = "France";  break;
+        case 'PJM_ROANOKE':
+          func.series[0].data[1].color = '#FFA800'; region_name = "East US"; break;
+        case 'CAISO_NORTH':
+          func.series[0].data[2].color = '#FFA800'; region_name = "West US"; break;
+        case 'NEM_NSW':
+          func.series[0].data[3].color = '#FFA800'; region_name = "Australia"; break;
+        case 'UK':
+          func.series[0].data[4].color = '#FFA800'; region_name = "UK"; break;
+      }
+    }
+    document.getElementById('region_used').innerHTML = 'Region used: ' + region_name;
+    let chart = Highcharts.chart('chart_area', func);
+
+  });
+}
+</script>
+
+<!--IP Script, this is used to calculate the closest region.-->
+<script>
+/*
+   *   This file is the entire script combined in working order.
+   *   Copyright 2021 © Joey Malvinni
+   *   License: MIT
+   */
+
+// [---------------------------------------------------------------------------]
+// File: ip_validator.js
+
+/*
+*   This module validates the two types of IP addresses.
+*   Copyright 2021 © Joey Malvinni
+*   License: MIT
+*/
+
+// The function that checks if the given IPv4 address is valid.
+function is_ipv4(ip){
+  return regex_v4.test(ip);
+};
+
+// Checks if the IPv6 address is valid.
+function is_ipv6(ip){
+  return regex_v6.test(ip);
+};
+
+// Simple IP regex that works on both IPv6 and IPv4
+var simpleIPRegex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g;
+
+// IPv4 regex used to determine whether an IP is IPv4 or not.
+let regex_v4 = /((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])/;
+
+// The IPv6 regex used when determining an IPv6 address.
+let regex_v6 = /((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))/;
+
+// Exporting the two regexes in an array to be used in the main detector.
+let ip_regex_array = [regex_v6, regex_v4]
+
+
+// [---------------------------------------------------------------------------]
+// File: peer_conn.js
+
+/*
+*   This module provides the main WebRTC functions that return IP addresses from the STUN request.
+*   Copyright 2021 © Joey Malvinni
+*   License: MIT
+*/
+
+
+function peer(callback){
+  // Creating the peer connection.
+  var WebRTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
+  // Initializing the connection.
+  var createdConnection;
+
+  // Main start function.
+  function start(){
+    // Creating the actual connection.
+    createConnection()
+    // Log the STUN request.
+    createStunRequest()
+  };
+
+  // Stop function to reset the connection.
+  function stop(){
+    // Checking if the connection has been created or not.
+    if (createdConnection) {
+      // Attempt to close it, if RTCPeerConnection.close() is not supported, remove the event listeners.
+      try {
+        createdConnection.close();
+      } finally {
+        createdConnection.onicecandidate = () => {};
+        createdConnection = null;
+      };
+    };
+  };
+
+  // Function that makes the connection request to Google's STUN server
+  function createConnection(){
+    let iceServers = [{
+      urls: 'stun:stun.l.google.com:19302'
+    }];
+    // Creating the connection with the STUN server.
+    createdConnection = new WebRTCPeerConnection({ iceServers });
+    // Handling the ICE candidate event.
+    createdConnection.onicecandidate = (data) => handleCandidates(data);
+    // Creation of the fake data channel.
+    createdConnection.createDataChannel('fake_data_channel');
+  };
+
+  // Function that creates the STUN request offer needed to get the IPs.
+  function createStunRequest(){
+    // Create the offer that exposes the IP addresses.
+    return createdConnection.createOffer().then(sdp => createdConnection.setLocalDescription(sdp));
+  };
+
+  // Handling the onIceCandidate event.
+  function handleCandidates(ice){
+    // Checking if the ICE candidate lines given are valid.
+    if (ice && ice.candidate && ice.candidate.candidate) {
+      // Returning the IPs to the main function.
+      callback(ice && ice.candidate && ice.candidate.candidate);
+    };
+  };
+
+  // Returning the main functions needed.
+  return {
+    start,
+    stop,
+    createConnection,
+    createStunRequest,
+    handleCandidates
+  };
+};
+
+// [---------------------------------------------------------------------------]
+// File: public_ip.js
+
+/*
+*   This module provides the worker functions that return the public IP addresses.
+*   Copyright 2021 © Joey Malvinni
+*   License: MIT
+*/
+
+
+function publicIPs(timer){
+  // Timing validation.
+  if(timer) if(timer < 100) throw new Error('Custom timeout cannot be under 100 milliseconds.');
+
+  // IPs is the final array of all valid IPs found.
+  var IPs = [];
+  // Creating the peer connection request while handling the callback event.
+  var peerConn = peer(handleIceCandidates);
+
+  function getIps(){
+    // Returning a promise.
+    return new Promise(function(resolve, reject) {
+      // Starting the peer connection.
+      peerConn.start();
+      // Setting the timer.
+      setTimeout(() => {
+        // Checking if the IP array exists.
+        if(!IPs || IPs === []){
+          // Rejecting the error
+          reject('No IP addresses were found.')
+        } else {
+          // Return the unique IP addresses in an array.
+          resolve(unique(IPs.flat(Infinity)))
+        };
+        // reset the peer connection.
+        reset();
+        // Set the Timeout to the custom timer, default to 500 milliseconds.
+      }, timer || 500);
+    });
+  };
+
+  function handleIceCandidates(ip){
+    var array = [];
+    // Looping over the two regexs for IPv6 and IPv4
+    for(let regex of ip_regex_array){
+      let arr = [];
+      // Lutting all of the strings that match either IP format in an array
+      let possible_ips_array = regex.exec(ip)
+      if(possible_ips_array){
+        // Looping over that array
+        for(let i = 0; i < possible_ips_array.length; i++){
+          // Checking if the "IP" is valid
+          if(is_ipv4(possible_ips_array[i]) || is_ipv6(possible_ips_array[i])){
+            arr.push(possible_ips_array[i])
+          };
+        };
+        array.push(arr);
+      };
+    };
+    // Final function that does more checks to determine the array's validity,
+    // Also flattens the array to remove extraneous sub-arrays.
+    push(array.flat(Infinity))
+  };
+
+  function push(ip){
+    // Checks if the IP addresses givin are already in the array.
+    if(!IPs.includes(ip)){
+      IPs.push(unique(ip.flat(Infinity)));
+    };
+  };
+
+  function reset(){
+    // Stops the peer connection to the STUN server.
+    peerConn.stop()
+  };
+  // Use this to only return unique IP addresses.
+  function unique(a) {
+    return Array.from(new Set(a));
+  };
+
+  return getIps();
+};
+
+// [---------------------------------------------------------------------------]
+// File: index.js
+
+/*
+*   This module combines all of the worker modules into the main functions that get exported.
+*   Copyright 2021 © Joey Malvinni
+*   License: MIT
+*/
+
+// Categorizes the IPs by IP, type, and IPv4.
+function getIPTypes(timer){
+  // Returning the result as a promise.
+  return new Promise(function(resolve, reject) {
+    // Final array
+    let finalIpArray = []
+    // Getting the raw IPs in an array.
+    publicIPs(timer).then((ips)=>{
+      // Looping over each IP.
+      ips.forEach(ip => {
+        if (ip.match(/^(192\.168\.|169\.254\.|10\.|172\.(1[6-9]|2\d|3[01]))/)) {
+          // The IP is private.
+          finalIpArray.push({ ip: ip, type: 'private', IPv4: true })
+        } else if (ip.match(/((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))/)) {
+          // The IP is an IPv6 address.
+          finalIpArray.push({ ip: ip, type: 'IPv6', IPv4: false })
+        } else {
+          // Assume the IP is public.
+          finalIpArray.push({ ip: ip, type: 'public', IPv4: true })
+        }
+      })
+      // Resolving the promise.
+      resolve(finalIpArray)
+    }).catch(reject)
+  })
+}
+
+// Filters out IPv4 addresses.
+function getIPv4(timer) {
+  return getIPTypes(timer).then(ips => {
+    // Filters the IP by IPv4.
+    const ip = ips.filter(ip => ip.IPv4);
+    // Loops over each object and extracts the IP.
+    for(let i = 0; i < ip.length; i++){
+      ip[i] = ip[i].ip
+    }
+    // Returns undefined if the array is empty.
+    return ip ? ip : '';
+  });
+}
+
+// Filters out IPv6 addresses.
+function getIPv6(timer) {
+  // Getting the IPs by type.
+  return getIPTypes(timer).then(ips => {
+    // Filtering the IPs by IPv6.
+    const ip = ips.filter(ip => ip.type === 'IPv6');
+    // Extracting the IPs
+    for(let i = 0; i < ip.length; i++){
+      // Removing all other data from the object.
+      ip[i] = ip[i].ip
+    }
+    // Returning the IP or undefined.
+    return ip ? ip.ip : '';
+  });
+}
+
+// Returns all of the functions in an object, default to getting all of the IPs without any filtering applied.
+function getIPs(timer){
+  return Object.assign(
+          publicIPs(timer), {
+            types: getIPTypes,
+            public: publicIPs,
+            IPv4: getIPv4,
+            IPv6: getIPv6,
+          }
+  )
+}
+</script>
+
+</body>
+</html>
